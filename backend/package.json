@@ -8,8 +8,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Shivaa Krishnan",
+  "license": "MIT",
   "dependencies": {
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
