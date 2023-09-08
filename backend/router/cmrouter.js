@@ -4,7 +4,8 @@ const {
     getContact,
     createContact,
     updateContact,
-    deleteContact} = require('../controller/cmcontroller')
+    deleteContact} = require('../controller/cmcontroller');
+const validateToken = require('../middleware/validateTokenHandler');
 
 const router = express.Router()
 /*
@@ -28,6 +29,7 @@ router.delete("/:id", (req, resp)=> {
     controller.deleteContact(req, resp)
 })*/
 
+router.use(validateToken)
 router.route("/").get(getAllContacts).post(createContact);
 router.route("/:id").get(getContact).put(updateContact).delete(deleteContact);
 

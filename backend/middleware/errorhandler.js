@@ -40,7 +40,7 @@ const errorHandler = (err, req, resp, next) => {
         break
         default:
             console.log(`Unknown error : ${err}`)
-            resp.json({
+            resp.status(500).json({
                 title: "Server Error",
                 message: err.message,
                 stackTrace: err.stack,

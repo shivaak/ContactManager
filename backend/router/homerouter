@@ -1,0 +1,13 @@
+const express = require('express')
+const {
+    login,
+    getCurrentLoggedInUser,
+    } = require('../controller/usercontroller')
+const validateToken = require('../middleware/validateTokenHandler')
+
+const router = express.Router()
+
+router.route("/login").post(login)
+router.route("/current").get(validateToken, getCurrentLoggedInUser)
+
+module.exports = router

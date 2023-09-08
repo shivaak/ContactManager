@@ -2,10 +2,11 @@ const Contact = require("../model/contact")
 
 //@desc Get all contacts
 //@route GET /api/contact
-//@access public
+//@access private
 const getAllContacts =  async (req, resp, next) => {
+    // get all contacts added by this user
     Contact
-        .find()
+        .find({"user_id" : req.user.id})
         .then(contacts => {
             resp.status(200).json(contacts)
         }).catch(next)
@@ -13,7 +14,7 @@ const getAllContacts =  async (req, resp, next) => {
 
 //@desc Get a contact by ID
 //@route GET /api/contact/:id
-//@access public
+//@access private
 const getContact = async (req, resp, next) => {
     Contact
         .findById(req.params.id)
@@ -34,9 +35,10 @@ const createContact = async (req, resp, next) => {
     const { name, email, phone } = req.body;
     if (!name || !email || !phone) {
       resp.status(400);
-      throw new Error("All fields are mandatory !");
+      return next(new Error("All fields are mandatory. [username, password, email]"))
     }
    Contact.create({
+     "user_id":req.user.id,
       name,
       email,
       phone
@@ -47,13 +49,22 @@ const createContact = async (req, resp, next) => {
 
 //@desc Update contact
 //@route PUT /api/contact/:id
-//@access public
+//@access private
 const updateContact = async (req, resp, next) => {
     const { name, email, phone } = req.body;
-    if (!name || !email || !phone) {
+    /*if (!name || !email || !phone) {
       resp.status(400);
-      throw new Error("All fields are mandatory !");
-    }
+      return next(new Error("All fields are mandatory [username, password, email]"))
+    }*/
+
+    Contact.findById(req.params.id)
+        .then(oldContact => {
+            if(!oldContact || oldContact.user_id.toString()!==req.user.id){
+                resp.status(403);
+                throw new Error("UnAuthorized.");
+            }
+        }).catch(next);
+
 
     Contact.findByIdAndUpdate(
         req.params.id,
@@ -73,8 +84,20 @@ const updateContact = async (req, resp, next) => {
 
 //@desc Delete contact
 //@route DELETE /api/contact/:id
-//@access public
+//@access private
 const deleteContact = async (req, resp, next) => {
+    Contact.findById(req.params.id)
+        .then(oldContact => {
+            if(!oldContact){
+                resp.status(404);
+                throw new Error("Contact not found");
+            }
+            if(oldContact.user_id.toString()!==req.user.id){
+                resp.status(403);
+                throw new Error("Unauthorized");
+            }
+        }).catch(next);
+
     Contact
         .findByIdAndDelete(req.params.id)
         .then(success => {
