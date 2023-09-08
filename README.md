@@ -17,7 +17,7 @@ This is a simple Node.js application for managing contacts and user authenticati
 ### User Management
 
 - **Register a New User**
-  - URL: `/api/user/register`
+  - URL: `/api/user`
   - Method: POST
   - Request Body:
     - `username`: User's username
@@ -25,14 +25,14 @@ This is a simple Node.js application for managing contacts and user authenticati
     - `password`: User's password
 
 - **Login**
-  - URL: `/api/user/login`
+  - URL: `/login`
   - Method: POST
   - Request Body:
     - `email`: User's email address
     - `password`: User's password
 
 - **Get Current User**
-  - URL: `/api/user/current`
+  - URL: `/current`
   - Method: GET
   - Authentication Required: Yes
 
